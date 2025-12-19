@@ -1,0 +1,82 @@
+[
+  {
+    "profile": {
+      "gender": "male",
+      "weightRange": "66-80",
+      "goal": "lose_weight",
+      "activity": "moderate"
+    },
+    "workoutPlan": {
+      "schedule": [
+        "Day 1 – Chest",
+        "Day 2 – Back",
+        "Day 3 – Legs",
+        "Day 4 – Shoulders",
+        "Day 5 – Arms",
+        "Day 6 – Cardio",
+        "Day 7 – Rest"
+      ],
+      "exercises": [
+        {
+          "day": "Day 1 – Chest",
+          "routines": [
+            {
+              "name": "Bench Press",
+              "sets": 4,
+              "reps": 10,
+              "description": "Flat bench press with moderate weight"
+            },
+            {
+              "name": "Incline Dumbbell Press",
+              "sets": 3,
+              "reps": 12
+            }
+          ]
+        },
+        {
+          "day": "Day 2 – Back",
+          "routines": [
+            {
+              "name": "Lat Pulldown",
+              "sets": 4,
+              "reps": 10
+            },
+            {
+              "name": "Seated Cable Row",
+              "sets": 3,
+              "reps": 12
+            }
+          ]
+        }
+      ]
+    },
+    "dietPlan": {
+      "dailyCalories": 2200,
+      "meals": [
+        {
+          "name": "Breakfast",
+          "foods": [
+            "Oats",
+            "Boiled eggs",
+            "Fruit"
+          ]
+        },
+        {
+          "name": "Lunch",
+          "foods": [
+            "Rice",
+            "Dal",
+            "Grilled chicken"
+          ]
+        },
+        {
+          "name": "Dinner",
+          "foods": [
+            "Roti",
+            "Paneer sabzi"
+          ]
+        }
+      ]
+    }
+  }
+]

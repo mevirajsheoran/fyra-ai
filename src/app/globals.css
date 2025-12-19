@@ -1,0 +1,1286 @@
+@import "tailwindcss";
+
+:root {
+  /* Shiny Silver Robotic Theme */
+  --background: 220 15% 6%;
+  --foreground: 0 0% 95%;
+
+  --card: 220 15% 10%;
+  --card-foreground: 0 0% 95%;
+
+  /* Silver as primary */
+  --primary: 210 15% 75%;
+  --primary-foreground: 220 15% 10%;
+
+  --secondary: 220 10% 18%;
+  --secondary-foreground: 0 0% 90%;
+
+  --muted: 220 10% 15%;
+  --muted-foreground: 220 10% 55%;
+
+  /* Accent - Bright Silver/Platinum */
+  --accent: 210 20% 85%;
+  --accent-foreground: 220 15% 10%;
+
+  --border: 220 10% 22%;
+  --input: 220 10% 15%;
+  --ring: 210 15% 75%;
+
+  --radius: 0.5rem;
+
+  /* Silver Metallic Custom Properties */
+  --silver-shine: #E8E8E8;
+  --silver-light: #C0C0C0;
+  --silver-medium: #A8A8A8;
+  --silver-dark: #707070;
+  --silver-deeper: #505050;
+  --platinum: #E5E4E2;
+  --chrome: #DBE4EB;
+  --steel: #71797E;
+
+  /* Glow colors */
+  --silver-glow: rgba(192, 192, 192, 0.5);
+  --white-glow: rgba(255, 255, 255, 0.3);
+  --platinum-glow: rgba(229, 228, 226, 0.4);
+}
+
+/* Base Styles */
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top, rgba(192, 192, 192, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(112, 112, 112, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0b0f 0%, #12141a 50%, #0a0b0f 100%);
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+}
+
+/* Custom scrollbar - Silver */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0b0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #C0C0C0 0%, #505050 100%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #E8E8E8 0%, #707070 100%);
+}
+
+/* Selection - Silver */
+::selection {
+  background: rgba(192, 192, 192, 0.3);
+  color: white;
+}
+
+::-moz-selection {
+  background: rgba(192, 192, 192, 0.3);
+  color: white;
+}
+
+/* ========================================
+   METALLIC SILVER TEXT EFFECTS
+   ======================================== */
+
+/* Shiny Silver Gradient Text */
+.text-silver-shine {
+  background: linear-gradient(135deg,
+      #FFFFFF 0%,
+      #E8E8E8 15%,
+      #C0C0C0 30%,
+      #A8A8A8 50%,
+      #C0C0C0 70%,
+      #E8E8E8 85%,
+      #FFFFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Chrome Text Effect */
+.text-chrome {
+  background: linear-gradient(180deg,
+      #FFFFFF 0%,
+      #E0E0E0 25%,
+      #A0A0A0 50%,
+      #E0E0E0 75%,
+      #FFFFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Platinum Text */
+.text-platinum {
+  background: linear-gradient(135deg,
+      #F8F8F8 0%,
+      #E5E4E2 25%,
+      #D4D4D4 50%,
+      #E5E4E2 75%,
+      #F8F8F8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated Shine Text */
+.text-shine-animated {
+  background: linear-gradient(90deg,
+      #A8A8A8 0%,
+      #E8E8E8 25%,
+      #FFFFFF 50%,
+      #E8E8E8 75%,
+      #A8A8A8 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shine-text 3s linear infinite;
+}
+
+@keyframes shine-text {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ========================================
+   SILVER GLOW EFFECTS
+   ======================================== */
+
+.glow-silver-sm {
+  box-shadow:
+    0 0 10px rgba(192, 192, 192, 0.2),
+    0 0 20px rgba(192, 192, 192, 0.1);
+}
+
+.glow-silver-md {
+  box-shadow:
+    0 0 20px rgba(192, 192, 192, 0.3),
+    0 0 40px rgba(192, 192, 192, 0.15),
+    0 0 60px rgba(192, 192, 192, 0.05);
+}
+
+.glow-silver-lg {
+  box-shadow:
+    0 0 30px rgba(192, 192, 192, 0.4),
+    0 0 60px rgba(192, 192, 192, 0.2),
+    0 0 100px rgba(192, 192, 192, 0.1);
+}
+
+/* White Core Glow (Like bright metal) */
+.glow-white-core {
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 30px rgba(192, 192, 192, 0.3),
+    0 0 50px rgba(168, 168, 168, 0.2);
+}
+
+.text-glow-silver {
+  text-shadow:
+    0 0 10px rgba(192, 192, 192, 0.5),
+    0 0 20px rgba(192, 192, 192, 0.3),
+    0 0 30px rgba(192, 192, 192, 0.2);
+}
+
+/* ========================================
+   METALLIC SURFACES & CARDS
+   ======================================== */
+
+/* Brushed Metal Effect */
+.metal-brushed {
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0) 1px,
+      rgba(255, 255, 255, 0) 2px,
+      rgba(255, 255, 255, 0.03) 3px),
+    linear-gradient(180deg, #2a2a2e 0%, #1a1a1e 100%);
+}
+
+/* Polished Silver Surface */
+.metal-polished {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(192, 192, 192, 0.05) 50%,
+      rgba(255, 255, 255, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(192, 192, 192, 0.2);
+}
+
+/* Chrome Card */
+.card-chrome {
+  background: linear-gradient(145deg,
+      rgba(40, 40, 45, 0.9) 0%,
+      rgba(25, 25, 30, 0.95) 100%);
+  border: 1px solid rgba(192, 192, 192, 0.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Glassmorphism Silver */
+.glass-silver {
+  background: rgba(192, 192, 192, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(192, 192, 192, 0.1);
+}
+
+.glass-silver-strong {
+  background: rgba(192, 192, 192, 0.08);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(192, 192, 192, 0.2);
+}
+
+/* ========================================
+   SILVER BORDERS & LINES
+   ======================================== */
+
+/* Shiny Silver Border */
+.border-silver-shine {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--background), var(--background)) padding-box,
+    linear-gradient(135deg, #707070, #E8E8E8, #707070) border-box;
+}
+
+/* Animated Rotating Border */
+.border-silver-animated {
+  position: relative;
+  background: hsl(var(--background));
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.border-silver-animated::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg,
+      #707070,
+      #C0C0C0,
+      #E8E8E8,
+      #FFFFFF,
+      #E8E8E8,
+      #C0C0C0,
+      #707070);
+  z-index: -2;
+  animation: rotate-border 4s linear infinite;
+}
+
+.border-silver-animated::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: hsl(var(--background));
+  border-radius: calc(0.75rem - 2px);
+  z-index: -1;
+}
+
+/* Gradient Line Separator */
+.line-silver {
+  height: 1px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(112, 112, 112, 0.3) 15%,
+      rgba(192, 192, 192, 0.6) 50%,
+      rgba(112, 112, 112, 0.3) 85%,
+      transparent 100%);
+}
+
+.line-silver-glow {
+  height: 1px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(192, 192, 192, 0.8) 50%,
+      transparent 100%);
+  box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+}
+
+/* ========================================
+   BUTTONS - SILVER THEME
+   ======================================== */
+
+/* Primary Silver Button */
+.btn-silver-primary {
+  background: linear-gradient(135deg,
+      #C0C0C0 0%,
+      #E8E8E8 50%,
+      #C0C0C0 100%);
+  color: #0a0a0f;
+  font-weight: 600;
+  border: none;
+  box-shadow:
+    0 4px 15px rgba(192, 192, 192, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-silver-primary:hover {
+  background: linear-gradient(135deg,
+      #D0D0D0 0%,
+      #FFFFFF 50%,
+      #D0D0D0 100%);
+  box-shadow:
+    0 6px 25px rgba(192, 192, 192, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Outline Silver Button */
+.btn-silver-outline {
+  background: transparent;
+  color: #C0C0C0;
+  border: 2px solid rgba(192, 192, 192, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-silver-outline:hover {
+  background: rgba(192, 192, 192, 0.1);
+  border-color: rgba(192, 192, 192, 0.8);
+  box-shadow: 0 0 20px rgba(192, 192, 192, 0.2);
+  color: #E8E8E8;
+}
+
+/* Ghost Silver Button */
+.btn-silver-ghost {
+  background: rgba(192, 192, 192, 0.05);
+  color: #A8A8A8;
+  border: 1px solid rgba(192, 192, 192, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-silver-ghost:hover {
+  background: rgba(192, 192, 192, 0.1);
+  color: #E8E8E8;
+  border-color: rgba(192, 192, 192, 0.3);
+}
+
+/* ========================================
+   ROBOTIC UI ELEMENTS
+   ======================================== */
+
+/* Circuit Pattern */
+.circuit-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23C0C0C0' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Hex Grid Pattern */
+.hex-pattern-silver {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23C0C0C0' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Grid Lines */
+.grid-silver {
+  background-image:
+    linear-gradient(rgba(192, 192, 192, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(192, 192, 192, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Scanline Effect */
+.scanline {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(192, 192, 192, 0.6),
+      rgba(255, 255, 255, 0.8),
+      rgba(192, 192, 192, 0.6),
+      transparent);
+  animation: scan 3s linear infinite;
+}
+
+/* Corner Brackets - Robotic Style */
+.corner-brackets {
+  position: relative;
+}
+
+.corner-brackets::before,
+.corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(192, 192, 192, 0.4);
+  border-style: solid;
+}
+
+.corner-brackets::before {
+  top: -5px;
+  left: -5px;
+  border-width: 2px 0 0 2px;
+}
+
+.corner-brackets::after {
+  bottom: -5px;
+  right: -5px;
+  border-width: 0 2px 2px 0;
+}
+
+/* ========================================
+   NOISE & TEXTURE OVERLAYS
+   ======================================== */
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Vignette Effect */
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center,
+      transparent 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes scan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  95% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes rotate-border {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-silver {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(192, 192, 192, 0.2);
+    opacity: 1;
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(192, 192, 192, 0.4);
+    opacity: 0.8;
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(192, 192, 192, 0.3),
+      0 0 40px rgba(192, 192, 192, 0.1);
+  }
+
+  50% {
+    box-shadow:
+      0 0 30px rgba(192, 192, 192, 0.5),
+      0 0 60px rgba(192, 192, 192, 0.2);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-silver {
+  animation: pulse-silver 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 20s linear infinite;
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
+}
+
+/* Animation Delays */
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Text Colors */
+.text-silver-light {
+  color: #E8E8E8;
+}
+
+.text-silver {
+  color: #C0C0C0;
+}
+
+.text-silver-medium {
+  color: #A8A8A8;
+}
+
+.text-silver-dark {
+  color: #707070;
+}
+
+.text-platinum {
+  color: #E5E4E2;
+}
+
+/* Background Colors */
+.bg-silver-light {
+  background-color: #E8E8E8;
+}
+
+.bg-silver {
+  background-color: #C0C0C0;
+}
+
+.bg-silver-dark {
+  background-color: #707070;
+}
+
+/* Responsive Typography */
+.text-responsive-xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .text-responsive-xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .text-responsive-xl {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive-xl {
+    font-size: 4.5rem;
+    line-height: 1;
+  }
+}
+
+.text-responsive-lg {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+@media (min-width: 640px) {
+  .text-responsive-lg {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .text-responsive-lg {
+    font-size: 3rem;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive-lg {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+
+  /* ========================================
+   BLUE MICROPHONE BUTTON STYLES
+   ======================================== */
+
+  .mic-button-blue button {
+    background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #3B82F6 100%) !important;
+    border: none !important;
+    box-shadow:
+      0 4px 20px rgba(59, 130, 246, 0.4),
+      0 0 40px rgba(59, 130, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .mic-button-blue button:hover {
+    background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #2563EB 100%) !important;
+    box-shadow:
+      0 6px 30px rgba(59, 130, 246, 0.5),
+      0 0 60px rgba(59, 130, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Listening state - brighter blue */
+  .mic-button-blue button[data-listening="true"],
+  .mic-button-blue button.listening {
+    background: linear-gradient(135deg, #60A5FA 0%, #93C5FD 50%, #60A5FA 100%) !important;
+    box-shadow:
+      0 0 30px rgba(59, 130, 246, 0.6),
+      0 0 60px rgba(59, 130, 246, 0.4),
+      0 0 100px rgba(59, 130, 246, 0.2) !important;
+    animation: mic-pulse-blue 1.5s ease-in-out infinite !important;
+  }
+
+  @keyframes mic-pulse-blue {
+
+    0%,
+    100% {
+      box-shadow:
+        0 0 30px rgba(59, 130, 246, 0.6),
+        0 0 60px rgba(59, 130, 246, 0.4);
+    }
+
+    50% {
+      box-shadow:
+        0 0 50px rgba(59, 130, 246, 0.8),
+        0 0 100px rgba(59, 130, 246, 0.5);
+    }
+  }
+
+  /* Blue glow effect for mic */
+  .glow-blue {
+    box-shadow:
+      0 0 20px rgba(59, 130, 246, 0.4),
+      0 0 40px rgba(59, 130, 246, 0.2),
+      0 0 60px rgba(59, 130, 246, 0.1);
+
+  }
+  /* ========================================
+   BLUE CYBER THEME
+   ======================================== */
+
+/* Blue Color Custom Properties */
+:root {
+  /* Blue Colors */
+  --blue-shine: #60A5FA;
+  --blue-light: #93C5FD;
+  --blue-medium: #3B82F6;
+  --blue-dark: #2563EB;
+  --blue-deeper: #1D4ED8;
+  --cyan: #22D3EE;
+  --electric-blue: #0EA5E9;
+  --neon-blue: #38BDF8;
+  
+  /* Blue Glow colors */
+  --blue-glow: rgba(59, 130, 246, 0.5);
+  --cyan-glow: rgba(34, 211, 238, 0.4);
+  --electric-glow: rgba(14, 165, 233, 0.4);
+  
+  /* Cyber terminal background */
+  --cyber-terminal-bg: rgba(15, 23, 42, 0.8);
+}
+
+/* ========================================
+   BLUE TEXT EFFECTS
+   ======================================== */
+
+/* Shiny Blue Gradient Text */
+.text-blue-shine {
+  background: linear-gradient(
+    135deg, 
+    #93C5FD 0%, 
+    #60A5FA 15%, 
+    #3B82F6 30%, 
+    #2563EB 50%, 
+    #3B82F6 70%, 
+    #60A5FA 85%, 
+    #93C5FD 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Electric Blue Text */
+.text-electric {
+  background: linear-gradient(
+    180deg,
+    #38BDF8 0%,
+    #0EA5E9 25%,
+    #0284C7 50%,
+    #0EA5E9 75%,
+    #38BDF8 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+}
+
+/* Cyan Accent Text */
+.text-cyan-accent {
+  background: linear-gradient(
+    135deg,
+    #22D3EE 0%,
+    #06B6D4 25%,
+    #0891B2 50%,
+    #06B6D4 75%,
+    #22D3EE 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated Blue Shine Text */
+.text-blue-animated {
+  background: linear-gradient(
+    90deg,
+    #2563EB 0%,
+    #60A5FA 25%,
+    #93C5FD 50%,
+    #60A5FA 75%,
+    #2563EB 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shine-blue 3s linear infinite;
+}
+
+@keyframes shine-blue {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ========================================
+   BLUE GLOW EFFECTS
+   ======================================== */
+
+.glow-blue-sm {
+  box-shadow: 
+    0 0 10px rgba(59, 130, 246, 0.2),
+    0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+.glow-blue-md {
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.3),
+    0 0 40px rgba(59, 130, 246, 0.15),
+    0 0 60px rgba(59, 130, 246, 0.05);
+}
+
+.glow-blue-lg {
+  box-shadow: 
+    0 0 30px rgba(59, 130, 246, 0.4),
+    0 0 60px rgba(59, 130, 246, 0.2),
+    0 0 100px rgba(59, 130, 246, 0.1);
+}
+
+/* Cyan Core Glow */
+.glow-cyan-core {
+  box-shadow: 
+    0 0 10px rgba(34, 211, 238, 0.5),
+    0 0 30px rgba(59, 130, 246, 0.3),
+    0 0 50px rgba(37, 99, 235, 0.2);
+}
+
+.text-glow-blue {
+  text-shadow: 
+    0 0 10px rgba(59, 130, 246, 0.5),
+    0 0 20px rgba(59, 130, 246, 0.3),
+    0 0 30px rgba(59, 130, 246, 0.2);
+}
+
+/* ========================================
+   BLUE CYBER SURFACES & CARDS
+   ======================================== */
+
+/* Cyber Terminal Background */
+.bg-cyber-terminal-bg {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* Holographic Blue Surface */
+.cyber-holographic {
+  background: 
+    linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.1) 0%,
+      rgba(34, 211, 238, 0.05) 50%,
+      rgba(59, 130, 246, 0.1) 100%
+    );
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Blue Cyber Card */
+.card-cyber-blue {
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(30, 41, 59, 0.95) 100%
+  );
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 
+    inset 0 1px 0 rgba(59, 130, 246, 0.1),
+    0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Glassmorphism Blue */
+.glass-blue {
+  background: rgba(59, 130, 246, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.glass-blue-strong {
+  background: rgba(59, 130, 246, 0.08);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* ========================================
+   BLUE BORDERS & LINES
+   ======================================== */
+
+/* Shiny Blue Border */
+.border-blue-shine {
+  border: 1px solid transparent;
+  background: 
+    linear-gradient(var(--background), var(--background)) padding-box,
+    linear-gradient(135deg, #1D4ED8, #60A5FA, #1D4ED8) border-box;
+}
+
+/* Animated Rotating Blue Border */
+.border-blue-animated {
+  position: relative;
+  background: hsl(var(--background));
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.border-blue-animated::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    #1D4ED8,
+    #3B82F6,
+    #60A5FA,
+    #93C5FD,
+    #60A5FA,
+    #3B82F6,
+    #1D4ED8
+  );
+  z-index: -2;
+  animation: rotate-border 4s linear infinite;
+}
+
+.border-blue-animated::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: hsl(var(--background));
+  border-radius: calc(0.75rem - 2px);
+  z-index: -1;
+}
+
+/* Gradient Line Separator - Blue */
+.line-blue {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(37, 99, 235, 0.3) 15%,
+    rgba(59, 130, 246, 0.6) 50%,
+    rgba(37, 99, 235, 0.3) 85%,
+    transparent 100%
+  );
+}
+
+.line-blue-glow {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.8) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* ========================================
+   BUTTONS - BLUE THEME
+   ======================================== */
+
+/* Primary Blue Button */
+.btn-blue-primary {
+  background: linear-gradient(
+    135deg,
+    #3B82F6 0%,
+    #60A5FA 50%,
+    #3B82F6 100%
+  );
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  box-shadow: 
+    0 4px 15px rgba(59, 130, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-blue-primary:hover {
+  background: linear-gradient(
+    135deg,
+    #2563EB 0%,
+    #3B82F6 50%,
+    #2563EB 100%
+  );
+  box-shadow: 
+    0 6px 25px rgba(59, 130, 246, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Outline Blue Button */
+.btn-blue-outline {
+  background: transparent;
+  color: #60A5FA;
+  border: 2px solid rgba(59, 130, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-blue-outline:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  color: #93C5FD;
+}
+
+/* Ghost Blue Button */
+.btn-blue-ghost {
+  background: rgba(59, 130, 246, 0.05);
+  color: #60A5FA;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-blue-ghost:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #93C5FD;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* ========================================
+   CYBER UI ELEMENTS - BLUE
+   ======================================== */
+
+/* Circuit Pattern Blue */
+.circuit-pattern-blue {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%233B82F6' stroke-opacity='0.05' stroke-width='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Hex Grid Pattern Blue */
+.hex-pattern-blue {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%233B82F6' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Grid Lines Blue */
+.grid-blue {
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Scanline Effect Blue */
+.scanline-blue {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(59, 130, 246, 0.6), 
+    rgba(96, 165, 250, 0.8),
+    rgba(59, 130, 246, 0.6),
+    transparent
+  );
+  animation: scan 3s linear infinite;
+}
+
+/* Corner Brackets - Blue Cyber Style */
+.corner-brackets-blue {
+  position: relative;
+}
+
+.corner-brackets-blue::before,
+.corner-brackets-blue::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(59, 130, 246, 0.4);
+  border-style: solid;
+}
+
+.corner-brackets-blue::before {
+  top: -5px;
+  left: -5px;
+  border-width: 2px 0 0 2px;
+}
+
+.corner-brackets-blue::after {
+  bottom: -5px;
+  right: -5px;
+  border-width: 0 2px 2px 0;
+}
+
+/* ========================================
+   BLUE THEME ANIMATIONS
+   ======================================== */
+
+@keyframes pulse-blue {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+    opacity: 0.8;
+  }
+}
+
+@keyframes glow-pulse-blue {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.3),
+      0 0 40px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(59, 130, 246, 0.5),
+      0 0 60px rgba(59, 130, 246, 0.2);
+  }
+}
+
+@keyframes shimmer-blue {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Animation Classes - Blue */
+.animate-pulse-blue {
+  animation: pulse-blue 3s ease-in-out infinite;
+}
+
+.animate-glow-blue {
+  animation: glow-pulse-blue 2s ease-in-out infinite;
+}
+
+/* ========================================
+   BLUE UTILITY CLASSES
+   ======================================== */
+
+/* Text Colors - Blue */
+.text-blue-light {
+  color: #93C5FD;
+}
+
+.text-blue {
+  color: #60A5FA;
+}
+
+.text-blue-medium {
+  color: #3B82F6;
+}
+
+.text-blue-dark {
+  color: #2563EB;
+}
+
+.text-cyan {
+  color: #22D3EE;
+}
+
+.text-electric-blue {
+  color: #0EA5E9;
+}
+
+/* Background Colors - Blue */
+.bg-blue-light {
+  background-color: #93C5FD;
+}
+
+.bg-blue {
+  background-color: #60A5FA;
+}
+
+.bg-blue-dark {
+  background-color: #2563EB;
+}
+
+.bg-blue-darker {
+  background-color: #1D4ED8;
+}
+
+/* ========================================
+   PROFILE PAGE SPECIFIC OVERRIDES
+   ======================================== */
+
+/* Override primary color to blue for profile page */
+.profile-blue-theme {
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 11%;
+  --ring: 217 91% 60%;
+  --accent: 199 89% 48%;
+  --accent-foreground: 222 47% 11%;
+}
+
+/* Profile page primary elements */
+.profile-blue-theme .text-primary {
+  color: #3B82F6;
+}
+
+.profile-blue-theme .bg-primary {
+  background-color: #3B82F6;
+}
+
+.profile-blue-theme .bg-primary\/10,
+.profile-blue-theme .bg-primary\/20 {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.profile-blue-theme .border-primary {
+  border-color: #3B82F6;
+}
+
+.profile-blue-theme .border-primary\/50 {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.profile-blue-theme .hover\:border-primary\/50:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Profile page active states */
+.profile-blue-theme [data-state="active"] {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  color: #3B82F6 !important;
+}
+
+/* Tabs styling for blue theme */
+.profile-blue-theme .data-\[state\=active\]\:bg-primary\/20[data-state="active"] {
+  background-color: rgba(59, 130, 246, 0.2);
+}
+
+.profile-blue-theme .data-\[state\=active\]\:text-primary[data-state="active"] {
+  color: #3B82F6;
+}
+}
