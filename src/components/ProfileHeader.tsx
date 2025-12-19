@@ -1,10 +1,20 @@
-import { UserResource } from "@clerk/types";
 import CornerElements from "./CornerElements";
 
-const ProfileHeader = ({ user }: { user: UserResource | null | undefined }) => {
+interface ProfileHeaderProps {
+  user: {
+    imageUrl?: string;
+    fullName?: string | null;
+    primaryEmailAddress?: {
+      emailAddress?: string;
+    } | null;
+  } | null | undefined;
+}
+
+const ProfileHeader = ({ user }: ProfileHeaderProps) => {
   if (!user) return null;
+
   return (
-    <div className="mb-10 relative backdrop-blur-sm border border-border  p-6">
+    <div className="mb-10 relative backdrop-blur-sm border border-border p-6">
       <CornerElements />
 
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -37,7 +47,9 @@ const ProfileHeader = ({ user }: { user: UserResource | null | undefined }) => {
               <p className="text-xs font-mono text-primary">USER ACTIVE</p>
             </div>
           </div>
+
           <div className="h-px w-full bg-gradient-to-r from-primary via-secondary to-primary opacity-50 my-2"></div>
+
           <p className="text-muted-foreground font-mono">
             {user.primaryEmailAddress?.emailAddress}
           </p>
@@ -46,4 +58,5 @@ const ProfileHeader = ({ user }: { user: UserResource | null | undefined }) => {
     </div>
   );
 };
+
 export default ProfileHeader;

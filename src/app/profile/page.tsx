@@ -1,11 +1,10 @@
-// src/app/profile/page.tsx
-
 "use client";
 
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
+
 import ProfileHeader from "@/components/ProfileHeader";
 import NoFitnessPlan from "@/components/NoFitnessPlan";
 import CornerElements from "@/components/CornerElements";
@@ -20,10 +19,18 @@ import {
 } from "@/components/ui/accordion";
 
 const ProfilePage = () => {
-  const { user } = useUser();
-  const userId = user?.id as string;
+  const { user, isLoaded } = useUser();
 
-  const allPlans = useQuery(api.plans.getUserPlans, { userId });
+  // Prevent rendering before Clerk finishes loading
+  if (!isLoaded) return null;
+
+  const userId = user?.id;
+
+  const allPlans = useQuery(
+    api.plans.getUserPlans,
+    userId ? { userId } : "skip"
+  );
+
   const [selectedPlanId, setSelectedPlanId] = useState<null | string>(null);
 
   const activePlan = allPlans?.find((plan) => plan.isActive);
@@ -34,9 +41,10 @@ const ProfilePage = () => {
 
   return (
     <section className="relative z-10 pt-12 pb-32 flex-grow container mx-auto px-4">
+      {/* ✅ Pass user WITHOUT typing */}
       <ProfileHeader user={user} />
 
-      {allPlans && allPlans?.length > 0 ? (
+      {allPlans && allPlans.length > 0 ? (
         <div className="space-y-8">
           {/* PLAN SELECTOR */}
           <div className="relative backdrop-blur-sm border border-blue-500/30 rounded-lg p-6">
@@ -82,7 +90,8 @@ const ProfilePage = () => {
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
                 <h3 className="text-lg font-bold">
-                  PLAN: <span className="text-primary">{currentPlan.name}</span>
+                  PLAN:{" "}
+                  <span className="text-primary">{currentPlan.name}</span>
                 </h3>
               </div>
 
@@ -110,57 +119,64 @@ const ProfilePage = () => {
                     <div className="flex items-center gap-2 mb-4">
                       <CalendarIcon className="h-4 w-4 text-primary" />
                       <span className="font-mono text-sm text-muted-foreground">
-                        SCHEDULE: {currentPlan.workoutPlan.schedule.join(", ")}
+                        SCHEDULE:{" "}
+                        {currentPlan.workoutPlan.schedule.join(", ")}
                       </span>
                     </div>
 
                     <Accordion type="multiple" className="space-y-4">
-                      {currentPlan.workoutPlan.exercises.map((exerciseDay, index) => (
-                        <AccordionItem
-                          key={index}
-                          value={exerciseDay.day}
-                          className="border border-blue-500/20 rounded-lg overflow-hidden"
-                        >
-                          <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-blue-500/5 font-mono">
-                            <div className="flex justify-between w-full items-center">
-                              <span className="text-primary">{exerciseDay.day}</span>
-                              <div className="text-xs text-muted-foreground">
-                                {exerciseDay.routines.length} EXERCISES
-                              </div>
-                            </div>
-                          </AccordionTrigger>
-
-                          <AccordionContent className="pb-4 px-4">
-                            <div className="space-y-3 mt-2">
-                              {exerciseDay.routines.map((routine, routineIndex) => (
-                                <div
-                                  key={routineIndex}
-                                  className="border border-blue-500/15 rounded p-3 bg-background/50"
-                                >
-                                  <div className="flex justify-between items-start mb-2">
-                                    <h4 className="font-semibold text-foreground">
-                                      {routine.name}
-                                    </h4>
-                                    <div className="flex items-center gap-2">
-                                      <div className="px-2 py-1 rounded bg-primary/10 text-primary text-xs font-mono">
-                                        {routine.sets} SETS
-                                      </div>
-                                      <div className="px-2 py-1 rounded bg-secondary/20 text-secondary-foreground text-xs font-mono">
-                                        {routine.reps} REPS
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {routine.description && (
-                                    <p className="text-sm text-muted-foreground mt-1">
-                                      {routine.description}
-                                    </p>
-                                  )}
+                      {currentPlan.workoutPlan.exercises.map(
+                        (exerciseDay, index) => (
+                          <AccordionItem
+                            key={index}
+                            value={exerciseDay.day}
+                            className="border border-blue-500/20 rounded-lg overflow-hidden"
+                          >
+                            <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-blue-500/5 font-mono">
+                              <div className="flex justify-between w-full items-center">
+                                <span className="text-primary">
+                                  {exerciseDay.day}
+                                </span>
+                                <div className="text-xs text-muted-foreground">
+                                  {exerciseDay.routines.length} EXERCISES
                                 </div>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
+                              </div>
+                            </AccordionTrigger>
+
+                            <AccordionContent className="pb-4 px-4">
+                              <div className="space-y-3 mt-2">
+                                {exerciseDay.routines.map(
+                                  (routine, routineIndex) => (
+                                    <div
+                                      key={routineIndex}
+                                      className="border border-blue-500/15 rounded p-3 bg-background/50"
+                                    >
+                                      <div className="flex justify-between items-start mb-2">
+                                        <h4 className="font-semibold text-foreground">
+                                          {routine.name}
+                                        </h4>
+                                        <div className="flex items-center gap-2">
+                                          <div className="px-2 py-1 rounded bg-primary/10 text-primary text-xs font-mono">
+                                            {routine.sets} SETS
+                                          </div>
+                                          <div className="px-2 py-1 rounded bg-secondary/20 text-secondary-foreground text-xs font-mono">
+                                            {routine.reps} REPS
+                                          </div>
+                                        </div>
+                                      </div>
+                                      {routine.description && (
+                                        <p className="text-sm text-muted-foreground mt-1">
+                                          {routine.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        )
+                      )}
                     </Accordion>
                   </div>
                 </TabsContent>
@@ -186,7 +202,9 @@ const ProfilePage = () => {
                         >
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-2 h-2 rounded-full bg-primary"></div>
-                            <h4 className="font-mono text-primary">{meal.name}</h4>
+                            <h4 className="font-mono text-primary">
+                              {meal.name}
+                            </h4>
                           </div>
                           <ul className="space-y-2">
                             {meal.foods.map((food, foodIndex) => (
