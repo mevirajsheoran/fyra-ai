@@ -84,12 +84,13 @@ function normalizeWorkoutPlan(plan: WorkoutPlan): WorkoutPlan {
 }
 
 // 📦 FALLBACK SELECTION
-function getWeightRange(weight?: number) {
-  if (!weight) return "66-80";
+function getWeightRange(weight: number | null | undefined) {
+  if (weight == null) return "66-80";
   if (weight <= 65) return "50-65";
   if (weight <= 80) return "66-80";
   return "81-95";
 }
+
 
 function getFallbackPlan(userData: UserHealthData) {
   const weightRange = getWeightRange(userData.weight);
