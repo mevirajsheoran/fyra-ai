@@ -1,5 +1,3 @@
-// src/hooks/useSpeechRecognition.ts
-
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -7,6 +5,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 interface UseSpeechRecognitionProps {
   onResult: (transcript: string) => void;
   onError?: (error: string) => void;
+  onInterimResult?: (transcript: string) => void;
   language?: string;
 }
 
@@ -16,33 +15,46 @@ interface UseSpeechRecognitionReturn {
   startListening: () => void;
   stopListening: () => void;
   transcript: string;
+  interimTranscript: string;
+  isSpeaking: boolean; // NEW: User is actively speaking
 }
 
 export function useSpeechRecognition({
   onResult,
   onError,
+  onInterimResult,
   language = "en-US",
 }: UseSpeechRecognitionProps): UseSpeechRecognitionReturn {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Use 'any' type for the ref to avoid TypeScript issues
   const recognitionRef = useRef<any>(null);
   const onResultRef = useRef(onResult);
   const onErrorRef = useRef(onError);
+  const onInterimResultRef = useRef(onInterimResult);
+  const speakingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Keep refs updated
   useEffect(() => {
     onResultRef.current = onResult;
     onErrorRef.current = onError;
-  }, [onResult, onError]);
+    onInterimResultRef.current = onInterimResult;
+  }, [onResult, onError, onInterimResult]);
+
+  // Clear speaking timeout
+  const clearSpeakingTimeout = useCallback(() => {
+    if (speakingTimeoutRef.current) {
+      clearTimeout(speakingTimeoutRef.current);
+      speakingTimeoutRef.current = null;
+    }
+  }, []);
 
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Get SpeechRecognition constructor (with webkit prefix for Safari)
     const SpeechRecognitionAPI =
       (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
@@ -55,46 +67,80 @@ export function useSpeechRecognition({
     setIsSupported(true);
 
     const recognition = new SpeechRecognitionAPI();
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = language;
 
     recognition.onresult = (event: any) => {
       let finalTranscript = "";
-      let interimTranscript = "";
+      let interimText = "";
 
+      // Process results
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
-        const transcriptText = result[0].transcript;
-        
+        const text = result[0].transcript;
+
         if (result.isFinal) {
-          finalTranscript += transcriptText;
+          finalTranscript += text;
         } else {
-          interimTranscript += transcriptText;
+          interimText += text;
         }
       }
 
-      setTranscript(interimTranscript || finalTranscript);
-
-      if (finalTranscript) {
-        onResultRef.current(finalTranscript.trim());
-        setTranscript("");
+      // User is speaking if we have interim results
+      if (interimText) {
+        setIsSpeaking(true);
+        setInterimTranscript(interimText);
+        onInterimResultRef.current?.(interimText);
+        
+        // Reset speaking timeout
+        clearSpeakingTimeout();
+        speakingTimeoutRef.current = setTimeout(() => {
+          setIsSpeaking(false);
+        }, 1000);
       }
+
+      // Handle final transcript
+      if (finalTranscript) {
+        setTranscript(finalTranscript);
+        setInterimTranscript("");
+        setIsSpeaking(false);
+        clearSpeakingTimeout();
+        onResultRef.current(finalTranscript.trim());
+      }
+    };
+
+    recognition.onspeechstart = () => {
+      setIsSpeaking(true);
+    };
+
+    recognition.onspeechend = () => {
+      clearSpeakingTimeout();
+      speakingTimeoutRef.current = setTimeout(() => {
+        setIsSpeaking(false);
+      }, 500);
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      setIsSpeaking(false);
+      clearSpeakingTimeout();
     };
 
     recognition.onerror = (event: any) => {
       setIsListening(false);
-      setTranscript("");
+      setIsSpeaking(false);
+      setInterimTranscript("");
+      clearSpeakingTimeout();
+
+      // Ignore no-speech and aborted errors
+      if (event.error === "no-speech" || event.error === "aborted") {
+        return;
+      }
 
       const errorMessages: Record<string, string> = {
         "not-allowed": "Microphone access denied. Please allow microphone permission.",
-        "no-speech": "No speech detected. Please try again.",
         "network": "Network error. Please check your connection.",
-        "aborted": "Speech recognition was stopped.",
         "audio-capture": "No microphone found. Please check your microphone.",
         "service-not-allowed": "Speech recognition service not allowed.",
       };
@@ -105,8 +151,8 @@ export function useSpeechRecognition({
 
     recognitionRef.current = recognition;
 
-    // Cleanup
     return () => {
+      clearSpeakingTimeout();
       if (recognitionRef.current) {
         try {
           recognitionRef.current.abort();
@@ -115,13 +161,15 @@ export function useSpeechRecognition({
         }
       }
     };
-  }, [language]);
+  }, [language, clearSpeakingTimeout]);
 
   const startListening = useCallback(() => {
     if (!recognitionRef.current || isListening) return;
 
     try {
       setTranscript("");
+      setInterimTranscript("");
+      setIsSpeaking(false);
       recognitionRef.current.start();
       setIsListening(true);
     } catch (error) {
@@ -136,10 +184,13 @@ export function useSpeechRecognition({
     try {
       recognitionRef.current.stop();
       setIsListening(false);
+      setIsSpeaking(false);
+      setInterimTranscript("");
+      clearSpeakingTimeout();
     } catch (error) {
       console.error("Failed to stop speech recognition:", error);
     }
-  }, [isListening]);
+  }, [isListening, clearSpeakingTimeout]);
 
   return {
     isListening,
@@ -147,5 +198,7 @@ export function useSpeechRecognition({
     startListening,
     stopListening,
     transcript,
+    interimTranscript,
+    isSpeaking,
   };
 }

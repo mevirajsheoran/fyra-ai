@@ -1,12 +1,10 @@
-// src/app/generate-program/page.tsx
-
-"use client";
+  "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useVoiceAssistant } from "@/hooks/useVoiceAssistant";
 import { VoiceButton } from "@/components/voice-assistant/VoiceButton";
 import { StatusIndicator } from "@/components/voice-assistant/StatusIndicator";
@@ -25,6 +23,7 @@ const GenerateProgramPage = () => {
     error,
     isListening,
     isSpeaking,
+    isUserSpeaking,
     transcript,
     callEnded,
     isSupported,
@@ -35,17 +34,6 @@ const GenerateProgramPage = () => {
     stopSpeaking,
   } = useVoiceAssistant();
 
-  // Redirect after call ends
-  useEffect(() => {
-    if (callEnded) {
-      const timer = setTimeout(() => {
-        router.push("/profile");
-      }, 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [callEnded, router]);
-
-  // Start/End call handler
   const handleToggleCall = () => {
     if (callActive) {
       endCall();
@@ -56,7 +44,6 @@ const GenerateProgramPage = () => {
     }
   };
 
-  // Browser not supported
   if (!isSupported) {
     return (
       <div className="flex flex-col min-h-screen text-foreground pb-6 pt-24">
@@ -64,7 +51,7 @@ const GenerateProgramPage = () => {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Your browser doesn't support speech recognition. Please use
+              Your browser doesn&apos;t support speech recognition. Please use
               Chrome, Edge, or Safari for the best experience.
             </AlertDescription>
           </Alert>
@@ -72,6 +59,43 @@ const GenerateProgramPage = () => {
       </div>
     );
   }
+
+  const isFrozen = status === "generating" || callEnded;
+
+  // Determine user status text and color
+  const getUserStatus = () => {
+    if (isUserSpeaking) {
+      return { text: "Speaking...", color: "#22C55E", bgColor: "rgba(34, 197, 94, 0.5)" }; // Green
+    }
+    if (isListening) {
+      return { text: "Listening...", color: "#60A5FA", bgColor: "rgba(59, 130, 246, 0.5)" }; // Blue
+    }
+    return { text: "Ready", color: "#A8A8A8", bgColor: "rgba(192, 192, 192, 0.2)" }; // Gray
+  };
+
+  const userStatus = getUserStatus();
+
+  // Determine instruction text
+  const getInstructionText = () => {
+    if (status === "generating") {
+      return { emoji: "⏳", text: "Generating your personalized plan..." };
+    }
+    if (status === "processing") {
+      return { emoji: "⏳", text: "Processing your response..." };
+    }
+    if (isSpeaking) {
+      return { emoji: "🔊", text: "AI is speaking..." };
+    }
+    if (isUserSpeaking) {
+      return { emoji: "🎙️", text: "Keep speaking... I'm listening" };
+    }
+    if (isListening) {
+      return { emoji: "🎤", text: "Listening... speak now" };
+    }
+    return { emoji: "⏸️", text: "Click the microphone to speak" };
+  };
+
+  const instruction = getInstructionText();
 
   return (
     <div className="flex flex-col min-h-screen text-foreground overflow-hidden pb-6 pt-24">
@@ -128,10 +152,16 @@ const GenerateProgramPage = () => {
                     }`}
                   style={{ background: "rgba(192, 192, 192, 0.2)" }}
                 />
-                <div className="relative w-full h-full rounded-full bg-card flex items-center justify-center overflow-hidden"
-                  style={{ border: "1px solid rgba(192, 192, 192, 0.3)" }}>
-                  <div className="absolute inset-0" 
-                    style={{ background: "linear-gradient(to bottom, rgba(192, 192, 192, 0.1), rgba(80, 80, 80, 0.1))" }} 
+                <div
+                  className="relative w-full h-full rounded-full bg-card flex items-center justify-center overflow-hidden"
+                  style={{ border: "1px solid rgba(192, 192, 192, 0.3)" }}
+                >
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(to bottom, rgba(192, 192, 192, 0.1), rgba(80, 80, 80, 0.1))",
+                    }}
                   />
                   <img
                     src="/ai-avatar.png"
@@ -142,9 +172,7 @@ const GenerateProgramPage = () => {
               </div>
 
               <h2 className="text-xl font-bold text-silver-shine">Fyra AI</h2>
-              <p className="text-sm text-silver-dark mt-1">
-                Fitness & Diet Coach
-              </p>
+              <p className="text-sm text-silver-dark mt-1">Fitness & Diet Coach</p>
 
               {/* Status Indicator */}
               <div className="mt-4">
@@ -156,8 +184,8 @@ const GenerateProgramPage = () => {
           {/* USER CARD */}
           <Card className="card-chrome backdrop-blur-sm overflow-hidden relative">
             <div className="aspect-video flex flex-col items-center justify-center p-6 relative">
-              {/* Listening animation - BLUE for mic */}
-              {isListening && (
+              {/* Listening/Speaking animation */}
+              {(isListening || isUserSpeaking) && (
                 <div className="absolute inset-0 opacity-20">
                   <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 flex justify-center items-center h-20">
                     {[...Array(5)].map((_, i) => (
@@ -166,7 +194,9 @@ const GenerateProgramPage = () => {
                         className="mx-1 w-1 rounded-full animate-sound-wave"
                         style={{
                           animationDelay: `${i * 0.1}s`,
-                          background: "linear-gradient(180deg, #60A5FA, #3B82F6)",
+                          background: isUserSpeaking
+                            ? "linear-gradient(180deg, #4ADE80, #22C55E)" // Green when speaking
+                            : "linear-gradient(180deg, #60A5FA, #3B82F6)", // Blue when listening
                         }}
                       />
                     ))}
@@ -181,30 +211,37 @@ const GenerateProgramPage = () => {
                   alt="User"
                   className="size-full object-cover rounded-full"
                 />
-                {isListening && (
-                  <div 
+                {(isListening || isUserSpeaking) && (
+                  <div
                     className="absolute inset-0 border-4 rounded-full animate-pulse"
-                    style={{ borderColor: "#3B82F6" }}
+                    style={{
+                      borderColor: isUserSpeaking ? "#22C55E" : "#3B82F6"
+                    }}
                   />
                 )}
               </div>
 
               <h2 className="text-xl font-bold text-silver-shine">You</h2>
               <p className="text-sm text-silver-dark mt-1">
-                {user
-                  ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
-                  : "Guest"}
+                {user ? `${user.firstName || ""} ${user.lastName || ""}`.trim() : "Guest"}
               </p>
 
-              {/* User Status - BLUE when listening */}
-              <div className="mt-4 flex items-center gap-2 px-3 py-1 rounded-full glass-silver"
-                style={{ border: isListening ? "1px solid rgba(59, 130, 246, 0.5)" : "1px solid rgba(192, 192, 192, 0.2)" }}>
+              {/* User Status - Dynamic */}
+              <div
+                className="mt-4 flex items-center gap-2 px-3 py-1 rounded-full glass-silver transition-all duration-300"
+                style={{
+                  border: `1px solid ${userStatus.bgColor}`,
+                }}
+              >
                 <div
-                  className={`w-2 h-2 rounded-full ${isListening ? "animate-pulse" : ""}`}
-                  style={{ backgroundColor: isListening ? "#3B82F6" : "#707070" }}
+                  className={`w-2 h-2 rounded-full ${(isListening || isUserSpeaking) ? "animate-pulse" : ""}`}
+                  style={{ backgroundColor: userStatus.color }}
                 />
-                <span className="text-xs" style={{ color: isListening ? "#60A5FA" : "#A8A8A8" }}>
-                  {isListening ? "Speaking..." : "Ready"}
+                <span
+                  className="text-xs transition-colors duration-300"
+                  style={{ color: userStatus.color }}
+                >
+                  {userStatus.text}
                 </span>
               </div>
             </div>
@@ -216,31 +253,31 @@ const GenerateProgramPage = () => {
           messages={conversationState.messages}
           currentTranscript={transcript}
           isListening={isListening}
+          isUserSpeaking={isUserSpeaking}
           callEnded={callEnded}
         />
 
         {/* CALL CONTROLS */}
         <div className="w-full flex flex-col items-center gap-4 mt-8">
-          {/* Main action buttons */}
           <div className="flex items-center gap-6">
-            {/* BLUE MICROPHONE BUTTON */}
+            {/* MICROPHONE BUTTON */}
             {callActive && !callEnded && (
               <div className="mic-button-blue">
                 <VoiceButton
                   status={status}
                   isListening={isListening}
+                  isSpeaking={isSpeaking}
+                  isUserSpeaking={isUserSpeaking}
                   onClick={toggleListening}
-                  disabled={status === "generating"}
+                  disabled={isFrozen || isSpeaking}
                 />
               </div>
             )}
 
+            {/* START/END CALL BUTTON */}
             <Button
-              className={`w-40 text-xl rounded-3xl relative transition-all duration-300 ${
-                callActive
-                  ? "bg-red-600 hover:bg-red-700 text-white"
-                  : "btn-silver-primary"
-              }`}
+              className={`w-40 text-xl rounded-3xl relative transition-all duration-300 ${callActive ? "bg-red-600 hover:bg-red-700 text-white" : "btn-silver-primary"
+                }`}
               onClick={() => {
                 if (callEnded) {
                   router.push("/profile");
@@ -248,45 +285,34 @@ const GenerateProgramPage = () => {
                   handleToggleCall();
                 }
               }}
-              disabled={status === "generating"}
+              disabled={isFrozen && !callEnded}
             >
               {status === "generating" && (
-                <span 
+                <span
                   className="absolute inset-0 rounded-full animate-ping opacity-75"
                   style={{ backgroundColor: "rgba(192, 192, 192, 0.5)" }}
                 />
               )}
               <span>
-                {callActive
-                  ? "End Call"
+                {status === "generating"
+                  ? "Generating..."
                   : callEnded
                     ? "View Profile"
-                    : "Start Call"}
+                    : callActive
+                      ? "End Call"
+                      : "Start Call"}
               </span>
             </Button>
           </div>
 
-          {/* Skip speaking button */}
-          {isSpeaking && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={stopSpeaking}
-              className="text-silver-medium hover:text-silver-light hover:border-silver transition-colors"
-              style={{ borderColor: "rgba(192, 192, 192, 0.3)" }}
-            >
-              Skip
-            </Button>
-          )}
-
-          {/* Instructions */}
+          {/* Instructions - Smooth transitions */}
           {callActive && !callEnded && (
-            <p className="text-sm text-silver-medium text-center">
-              {isListening
-                ? "🎤 Speak now..."
-                : isSpeaking
-                  ? "🔊 AI is speaking..."
-                  : "Click the microphone to speak"}
+            <p
+              className="text-sm text-silver-medium text-center transition-all duration-300"
+              key={instruction.text} // Force re-render for smooth transition
+            >
+              <span className="mr-1">{instruction.emoji}</span>
+              {instruction.text}
             </p>
           )}
         </div>

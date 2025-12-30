@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface AIVisualDisplayProps {
   imageSrc: string;
@@ -10,6 +11,7 @@ interface AIVisualDisplayProps {
 
 const AIVisualDisplay = ({ imageSrc, className }: AIVisualDisplayProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   return (
     <div className={cn("relative", className)}>
@@ -37,25 +39,59 @@ const AIVisualDisplay = ({ imageSrc, className }: AIVisualDisplayProps) => {
 
           {/* Grid overlay */}
           <div className="absolute inset-0 opacity-20">
-            <div className="w-full h-full" style={{
-              backgroundImage: `
-                linear-gradient(rgba(192,192,192,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(192,192,192,0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '20px 20px'
-            }} />
+            <div 
+              className="w-full h-full" 
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(192,192,192,0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(192,192,192,0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '20px 20px'
+              }} 
+            />
           </div>
 
-          {/* Image */}
-          <img
-            src={imageSrc}
-            alt="AI Fitness Assistant"
-            className={cn(
-              "relative z-10 w-full h-full object-cover object-center transition-all duration-700",
-              isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
-            )}
-            onLoad={() => setIsLoaded(true)}
-          />
+          {/* Image - Using Next.js Image for better handling */}
+          {!hasError ? (
+            <Image
+              src={imageSrc}
+              alt="AI Fitness Assistant"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className={cn(
+                "relative z-10 object-cover object-center transition-all duration-700",
+                isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
+              )}
+              onLoad={() => setIsLoaded(true)}
+              onError={() => {
+                console.error("Failed to load image:", imageSrc);
+                setHasError(true);
+              }}
+            />
+          ) : (
+            // Fallback when image fails to load
+            <div className="relative z-10 w-full h-full flex items-center justify-center bg-gradient-to-br from-silver-800 to-silver-900">
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-silver-700/50 flex items-center justify-center">
+                  <svg 
+                    className="w-8 h-8 text-silver-400" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={1.5} 
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" 
+                    />
+                  </svg>
+                </div>
+                <p className="text-silver-400 text-sm font-mono">AI Assistant</p>
+              </div>
+            </div>
+          )}
 
           {/* Scan line effect */}
           <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
@@ -64,11 +100,9 @@ const AIVisualDisplay = ({ imageSrc, className }: AIVisualDisplayProps) => {
 
           {/* Targeting reticle */}
           <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
-            {/* Center circle */}
             <div className="relative w-1/3 h-1/3">
               <div className="absolute inset-0 border border-silver-300/30 rounded-full animate-pulse" />
               <div className="absolute inset-2 border border-silver-300/20 rounded-full" />
-              {/* Crosshairs */}
               <div className="absolute top-1/2 left-0 w-1/4 h-[1px] bg-silver-300/40 -translate-y-1/2" />
               <div className="absolute top-1/2 right-0 w-1/4 h-[1px] bg-silver-300/40 -translate-y-1/2" />
               <div className="absolute left-1/2 top-0 h-1/4 w-[1px] bg-silver-300/40 -translate-x-1/2" />

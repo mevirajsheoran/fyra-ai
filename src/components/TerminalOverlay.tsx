@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 const TerminalOverlay = () => {
   const [currentLine, setCurrentLine] = useState(0);
   const [displayText, setDisplayText] = useState("");
+  const [currentTime, setCurrentTime] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const terminalLines = [
     { prefix: "SYSTEM", text: "Initializing AI fitness module...", color: "text-cyan-400" },
@@ -13,6 +15,18 @@ const TerminalOverlay = () => {
     { prefix: "AI", text: "Loading personalization engine...", color: "text-cyan-400" },
     { prefix: "STATUS", text: "Ready for input", color: "text-green-400" },
   ];
+
+  // Handle client-side mounting and time updates
+  useEffect(() => {
+    setIsMounted(true);
+    setCurrentTime(new Date().toLocaleTimeString());
+    
+    const timeInterval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(timeInterval);
+  }, []);
 
   useEffect(() => {
     const line = terminalLines[currentLine];
@@ -76,7 +90,7 @@ const TerminalOverlay = () => {
               <span className="text-[9px] text-silver-500 font-mono">CONNECTED</span>
             </div>
             <span className="text-[9px] text-silver-600 font-mono">
-              {new Date().toLocaleTimeString()}
+              {isMounted ? currentTime : "--:--:-- --"}
             </span>
           </div>
         </div>
